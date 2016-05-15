@@ -2,15 +2,15 @@ import { NavigationExperimental } from 'react-native';
 import { connect } from 'react-redux';
 import { createSelector } from 'reselect';
 import selectNavigation from '../../selectors/navigation';
-const { Reducer: NavigationReducer } = NavigationExperimental;
-const { JumpToAction } = NavigationReducer.TabsReducer;
+// const { Reducer: NavigationReducer } = NavigationExperimental;
+// const { JumpToAction } = NavigationReducer.TabsReducer;
 
 const { RootContainer: NavigationRootContainer } = NavigationExperimental;
 
 class ReduxNavigationRootContainer extends NavigationRootContainer {
-	handleNavigation(tabIndex) {
+	handleNavigation(action) {
 		const { dispatch } = this.props;
-		dispatch(JumpToAction(tabIndex));
+		dispatch(action);
 	}
 
 	render() {
