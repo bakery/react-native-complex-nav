@@ -3,7 +3,7 @@ import { StyleSheet } from 'react-native';
 export default StyleSheet.create({
 	tabContent: {
 		flex: 1,
-		alignItems: 'center',
+		alignItems: 'center'
 	},
 	tabText: {
 		color: 'white',

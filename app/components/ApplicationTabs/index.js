@@ -1,5 +1,10 @@
-import React, { Component, View, Text, TabBarIOS } from 'react-native';
+import React, { Component, View, Text, TouchableHighlight, Image,
+	TabBarIOS, NavigationExperimental } from 'react-native';
 import styles from './styles';
+import Feed from '../Feed';
+
+const { Reducer: NavigationReducer } = NavigationExperimental;
+const { JumpToAction } = NavigationReducer.TabsReducer;
 
 class ApplicationTabs extends Component {
 	_renderTabContent(tab) {
@@ -9,9 +14,30 @@ class ApplicationTabs extends Component {
 		//   return <MapView />;
 		// }
 
+		if (tab.key === 'notifs') {
+			return (
+				<Feed navigationState={tab} onNavigate={this.props.onNavigate} />
+			);
+		}
+
 		return (
 			<View style={[styles.tabContent, {backgroundColor: 'green'}]}>
-				<Text>Tab {tab.key} content</Text>
+				<TouchableHighlight onPress={() => {
+					this.props.onNavigate({
+						type: 'push',
+						parent: tab.key,
+						route: {
+							key: 'welcome',
+							title: 'Main Screen',
+							showBackButton: false,
+							showCloseButton: true
+						}
+					});
+				}}>
+					<Image style={{width: 15,height: 15}}
+						source={{uri: 'http://facebook.github.io/react/img/logo_og.png'}}
+					/>
+				</TouchableHighlight>
 			</View>
 		);
 	}
@@ -22,7 +48,9 @@ class ApplicationTabs extends Component {
 				<TabBarIOS.Item key={tab.key}
 						icon={tab.icon}
 						selectedIcon={tab.selectedIcon}
-						title={tab.title} onPress={() => this.props.onNavigate(i) }
+						title={tab.title} onPress={
+							() => this.props.onNavigate(JumpToAction(i))
+						}
 						selected={this.props.navigationState.index === i}>
 						{ this._renderTabContent(tab) }
 				</TabBarIOS.Item>

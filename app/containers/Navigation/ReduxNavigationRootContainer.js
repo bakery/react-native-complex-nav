@@ -2,8 +2,6 @@ import { NavigationExperimental } from 'react-native';
 import { connect } from 'react-redux';
 import { createSelector } from 'reselect';
 import selectNavigation from '../../selectors/navigation';
-// const { Reducer: NavigationReducer } = NavigationExperimental;
-// const { JumpToAction } = NavigationReducer.TabsReducer;
 
 const { RootContainer: NavigationRootContainer } = NavigationExperimental;
 
