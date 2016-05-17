@@ -4,8 +4,9 @@
 *
 */
 
-import React, { Component, View, Text,
+import { View, Text,
 	NavigationExperimental, TouchableHighlight, Image } from 'react-native';
+import React, { Component } from 'react';
 import styles from './styles';
 import { connect } from 'react-redux';
 const { Header: NavigationHeader, CardStack: NavigationCardStack } = NavigationExperimental;

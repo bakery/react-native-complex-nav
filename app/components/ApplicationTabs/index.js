@@ -1,5 +1,6 @@
-import React, { Component, View, Text, TouchableHighlight, Image,
+import { View, Text, TouchableHighlight, Image,
 	TabBarIOS, NavigationExperimental } from 'react-native';
+import React, { Component } from 'react';
 import styles from './styles';
 import Feed from '../Feed';
 import { connect } from 'react-redux';

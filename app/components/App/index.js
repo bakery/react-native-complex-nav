@@ -4,7 +4,8 @@
  *
  */
 
-import React, { Component, View } from 'react-native';
+import { View } from 'react-native';
+import React, { Component } from 'react';
 import styles from './styles';
 import GlobalNavigation from '../../containers/GlobalNavigation';
 
