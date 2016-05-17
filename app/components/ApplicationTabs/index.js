@@ -2,7 +2,7 @@ import React, { Component, View, Text, TouchableHighlight, Image,
 	TabBarIOS, NavigationExperimental } from 'react-native';
 import styles from './styles';
 import Feed from '../Feed';
-
+import { connect } from 'react-redux';
 const { Reducer: NavigationReducer } = NavigationExperimental;
 const { JumpToAction } = NavigationReducer.TabsReducer;
 
@@ -14,9 +14,9 @@ class ApplicationTabs extends Component {
 		//   return <MapView />;
 		// }
 
-		if (tab.key === 'notifs') {
+		if (tab.key === 'feed') {
 			return (
-				<Feed navigationState={tab} onNavigate={this.props.onNavigate} />
+				<Feed />
 			);
 		}
 
@@ -43,7 +43,7 @@ class ApplicationTabs extends Component {
 	}
 
 	render() {
-		const children = this.props.navigationState.children.map( (tab, i) => {
+		const children = this.props.navigation.children.map( (tab, i) => {
 			return (
 				<TabBarIOS.Item key={tab.key}
 						icon={tab.icon}
@@ -51,7 +51,7 @@ class ApplicationTabs extends Component {
 						title={tab.title} onPress={
 							() => this.props.onNavigate(JumpToAction(i))
 						}
-						selected={this.props.navigationState.index === i}>
+						selected={this.props.navigation.index === i}>
 						{ this._renderTabContent(tab) }
 				</TabBarIOS.Item>
 			);
@@ -64,9 +64,23 @@ class ApplicationTabs extends Component {
 	}
 }
 
-ApplicationTabs.propTypes = {
-	onNavigate: React.PropTypes.func.isRequired,
-	navigationState: React.PropTypes.object.isRequired
-};
+function mapDispatchToProps(dispatch) {
+	return {
+		dispatch
+	};
+}
 
-export default ApplicationTabs;
+function mapStateToProps(state) {
+	return {
+		navigation: state.get('tabs')
+	};
+}
+export default connect(mapStateToProps, mapDispatchToProps, (stateProps, dispatchProps, ownProps) => {
+	return Object.assign({}, ownProps, stateProps, dispatchProps, {
+		onNavigate: (action) => {
+			dispatchProps.dispatch(Object.assign(action, {
+				scope: stateProps.navigation.key
+			}));
+		}
+	});
+})(ApplicationTabs);

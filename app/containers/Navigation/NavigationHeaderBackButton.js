@@ -1,2 +1,0 @@
-import NavigationHeaderBackButton from 'NavigationHeaderBackButton';
-export default NavigationHeaderBackButton;

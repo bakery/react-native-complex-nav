@@ -1,6 +1,6 @@
 /*
  *
- * Navigation  actions
+ * GlobalNavigation  actions
  *
  */
 

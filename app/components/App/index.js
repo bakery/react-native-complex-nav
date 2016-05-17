@@ -6,16 +6,16 @@
 
 import React, { Component, View } from 'react-native';
 import styles from './styles';
-import Navigation from '../../containers/Navigation';
+import GlobalNavigation from '../../containers/GlobalNavigation';
 
 class App extends Component {
-  render() {
-    return (
-      <View style={styles.appContainer}>
-        <Navigation />
-      </View>
-    );
-  }
+	render() {
+		return (
+			<View style={styles.appContainer}>
+				<GlobalNavigation />
+			</View>
+		);
+	}
 }
 
 
