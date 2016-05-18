@@ -7,7 +7,7 @@
 import { View } from 'react-native';
 import React, { Component } from 'react';
 import styles from './styles';
-import GlobalNavigation from '../../containers/GlobalNavigation';
+import GlobalNavigation from '../GlobalNavigation';
 
 class App extends Component {
 	render() {

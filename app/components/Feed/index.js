@@ -10,69 +10,64 @@ import React, { Component } from 'react';
 import styles from './styles';
 import { connect } from 'react-redux';
 const { Header: NavigationHeader, CardStack: NavigationCardStack } = NavigationExperimental;
-// import NavigationHeaderBackButton from '../../containers/Navigation/NavigationHeaderBackButton';
-// import NavigationHeaderCloseButton from '../../containers/Navigation/NavigationHeaderCloseButton';
+const NavigationHeaderBackButton = require('NavigationHeaderBackButton');
+import Items from '../Items';
+import ItemDetails from '../ItemDetails';
 
 class Feed extends Component {
 	render() {
 		return (
-			<View style={styles.feed}>
-				<NavigationCardStack
-				direction={'vertical'}
+			<NavigationCardStack
+				direction={'horizontal'}
 				navigationState={this.props.navigation}
 				onNavigate={this._onNavigate}
 				renderScene={this._renderScene.bind(this)}
 				renderOverlay={this._renderHeader.bind(this)}
 				style={styles.main}
-				/>
-			</View>
+			/>
 		);
 	}
 
 	_renderHeader(props) {
-		// const currentRoute = props.navigationState.children[
-		// 	props.navigationState.index
-		// ];
-		//
-		// if (currentRoute.title) {
-		// 	return (
-		// 		<NavigationHeader
-		// 		{...props}
-		// 		renderTitleComponent={this._renderTitleComponent.bind(this)}
-		// 		renderLeftComponent={this._renderLeftComponent.bind(this)}
-		// 		renderRightComponent={this._renderRightComponent.bind(this)}
-		// 		/>
-		// 	);
-		// }
+		if (props.scene.navigationState.title) {
+			return (
+				<NavigationHeader
+				{...props}
+				renderTitleComponent={this._renderTitleComponent.bind(this)}
+				renderLeftComponent={this._renderLeftComponent.bind(this)}
+				renderRightComponent={this._renderRightComponent.bind(this)}
+				/>
+			);
+		}
 
 		return null;
 	}
 
 	_renderTitleComponent(props) {
-		// const currentRoute = props.navigationState.children[
-		// 	props.navigationState.index
-		// ];
-		// return (
-		// 	<NavigationHeader.Title>{currentRoute.title}</NavigationHeader.Title>
-		// );
-		return null;
+		return (
+			<NavigationHeader.Title>{props.scene.navigationState.title}</NavigationHeader.Title>
+		);
 	}
 
 	_renderLeftComponent(props) {
-		// if (props.scene.navigationState.showBackButton) {
-		// 	return (
-		// 		<NavigationHeaderBackButton onNavigate={this._onNavigate.bind(this)} />
-		// 	);
-		// }
+		if (props.scene.navigationState.showBackButton) {
+			return (
+				<NavigationHeaderBackButton onNavigate={this.props.onNavigate.bind(this)} />
+			);
+		}
+
 		return null;
 	}
 
 	_renderRightComponent(props) {
-		// if (props.scene.navigationState.showCloseButton) {
-		// 	return (
-		// 		<NavigationHeaderCloseButton onNavigate={this._onNavigate.bind(this)} />
-		// 	);
-		// }
+		if (props.scene.navigationState.key === 'list') {
+			return (
+				<TouchableHighlight style={styles.buttonContainer} onPress={this._onAddItem.bind(this)}>
+					<Image style={styles.button} source={{uri: 'http://facebook.github.io/react/img/logo_og.png'}} />
+				</TouchableHighlight>
+			);
+		}
+
 		return null;
 	}
 
@@ -80,47 +75,41 @@ class Feed extends Component {
 		if (props.scene.navigationState.key === 'list') {
 			return (
 				<View style={{marginTop: NavigationHeader.HEIGHT}}>
-					<TouchableHighlight onPress={() => {
-						this.props.onNavigate({
-							type: 'push',
-							route: {
-								key: 'welcome',
-								title: 'Main Screen',
-								showBackButton: true,
-								showCloseButton: true
-							}
-						});
-					}}>
-						<Image style={{width: 15,height: 15}}
-							source={{uri: 'http://facebook.github.io/react/img/logo_og.png'}}
-						/>
-					</TouchableHighlight>
-					<Text>------------------</Text>
-					<TouchableHighlight onPress={() => {
-						this.props.onNavigate({
-							type: 'push',
-							scope: 'global',
-							route: {
-								key: 'welcome',
-								title: 'Main Screen'
-							}
-						});
-					}}>
-						<Image style={{width: 15,height: 15}}
-							source={{uri: 'http://facebook.github.io/react/img/logo_og.png'}}
-						/>
-					</TouchableHighlight>
+					<Items onSelectItem={this._onSelectItem.bind(this)} />
 				</View>
 			);
 		}
 
-		if (props.scene.navigationState.key === 'welcome') {
+		if (props.scene.navigationState.key === 'details') {
 			return (
-				<View style={{flex: 1, backgroundColor: 'red'}}>
-					<Text>Welcome welcome</Text>
+				<View style={{marginTop: NavigationHeader.HEIGHT}}>
+					<ItemDetails />
 				</View>
 			);
 		}
+	}
+
+	_onAddItem() {
+		this.props.onNavigate({
+			type: 'push',
+			scope: 'global',
+			route: {
+				key: 'new',
+				title: 'Main Screen',
+				showBackButton: true
+			}
+		});
+	}
+
+	_onSelectItem() {
+		this.props.onNavigate({
+			type: 'push',
+			route: {
+				key: 'details',
+				title: 'Item details',
+				showBackButton: true
+			}
+		});
 	}
 }
 

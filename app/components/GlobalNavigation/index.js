@@ -4,16 +4,13 @@
  *
  */
 
-import { View, Text,
-	NavigationExperimental, TouchableHighlight, Image } from 'react-native';
+import { View, NavigationExperimental } from 'react-native';
 import React, { Component } from 'react';
 import styles from './styles';
 import { connect } from 'react-redux';
-import ApplicationTabs from '../../components/ApplicationTabs';
-const {
-	Header: NavigationHeader,
-	CardStack: NavigationCardStack
-} = NavigationExperimental;
+import ApplicationTabs from '../ApplicationTabs';
+import NewItem from '../NewItem';
+const { CardStack: NavigationCardStack } = NavigationExperimental;
 
 class GlobalNavigation extends Component {
 	render() {
@@ -42,25 +39,23 @@ class GlobalNavigation extends Component {
 			);
 		}
 
-		if (props.scene.navigationState.key === 'welcome') {
+		if (props.scene.navigationState.key === 'new') {
 			return (
 				<View style={{flex: 1}}>
-					<Text>@@@@@@@@@@@@@@@@@@@@@@@@</Text>
-					<Text>Super warm welcome</Text>
+					<NewItem onClose={this._onCloseNewItem.bind(this)} />
 				</View>
 			);
 		}
-
-		return (
-			<View>
-				<Text>-------------------------------------</Text>
-				<Text>Welcome to the app</Text>
-			</View>
-		);
 	}
 
 	_renderTitleComponent(props) {
 		return null;
+	}
+
+	_onCloseNewItem() {
+		this.props.onNavigate({
+			type: 'BackAction'
+		});
 	}
 }
 
