@@ -15,7 +15,7 @@ const globalNavigation = NavigationReducer.StackReducer({
 		children: [
 			{
 				key: 'list',
-				title: 'Episodes'
+				title: 'Items'
 			},
 		],
 	},

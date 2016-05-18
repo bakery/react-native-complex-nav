@@ -21,7 +21,7 @@ const simpleIcon = {
 };
 
 const tabs = [
-	{ key: 'feed', icon: simpleIcon, title: 'Feed' },
+	{ key: 'feed', icon: simpleIcon, title: 'Items' },
 	{ key: 'notifications', icon: simpleIcon, title: 'Notifications' },
 	{ key: 'settings', icon: simpleIcon, title: 'Settings' }
 ];

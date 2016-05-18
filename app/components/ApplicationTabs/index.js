@@ -21,26 +21,17 @@ class ApplicationTabs extends Component {
 			);
 		}
 
-		return (
-			<View style={[styles.tabContent, {backgroundColor: 'green'}]}>
-				<TouchableHighlight onPress={() => {
-					this.props.onNavigate({
-						type: 'push',
-						parent: tab.key,
-						route: {
-							key: 'welcome',
-							title: 'Main Screen',
-							showBackButton: false,
-							showCloseButton: true
-						}
-					});
-				}}>
-					<Image style={{width: 15,height: 15}}
-						source={{uri: 'http://facebook.github.io/react/img/logo_og.png'}}
-					/>
-				</TouchableHighlight>
-			</View>
-		);
+		if (tab.key === 'notifications') {
+			return (
+				<View style={[styles.tabContent, {backgroundColor: 'green'}]} />
+			);
+		}
+
+		if (tab.key === 'settings') {
+			return (
+				<View style={[styles.tabContent, {backgroundColor: 'pink'}]} />
+			);
+		}
 	}
 
 	render() {
@@ -58,7 +49,7 @@ class ApplicationTabs extends Component {
 			);
 		});
 		return (
-			<TabBarIOS tintColor="white" barTintColor="darkslateblue">
+			<TabBarIOS tintColor="black">
 				{children}
 			</TabBarIOS>
 		);
