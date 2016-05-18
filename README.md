@@ -10,7 +10,7 @@ After playing with basic examples and figuring out how to hook new navigation co
 
 Here's a rough sketch of what we will be trying to accomplish with his app
 
-![Better js](.github/app-setup.gif)
+![React Native appliccation with complex navigation](.github/app-setup.gif)
 
 Notice how we have a few different navigatinal tiers - there's a top-level card stack navigation that manages Tab views and a 'New Item' screen (top level gray screen with React logo). 
 
@@ -22,7 +22,7 @@ The next navigational tier is within the feed tab that shows a list of items in 
 
 My initial attempt to implement this was to come up with 1 centralized navigation reducer plugged into the app on a top level managing this whole situation. I did manage to get to work with the scenario described above but looking back at it for a second, i realized i needed to do smth else. Just to give you an idea of how bad it was, here's a snapshot of the code for this nav reducer
 
-<show code for the original nav reducer>
+<script src="https://gist.github.com/callmephilip/8f36e30ede274638ce091749d6e9bc85.js"></script>
 
 Not only it is super hard to reason about the behavior of this reducer, supporting and extending this looks like a nightmare. What i really wanted is to have separate reducers for all the different nav tiers and plug them in when needed within different parts of the application. So we had to start from scratch
 
@@ -36,15 +36,15 @@ What if we could tackle navigation in isolation starting from the top level, add
 
 The first step would be to get top level card navigation to work
 
-<show original navigation diagram>
+![React Native card navigation](.github/top-level-nav.gif)
 
-Let's define a reducer for this using TabReducers 
+Let's define a reducer for this using StackReducer
 
-<show reducers file>
+<script src="https://gist.github.com/callmephilip/fcbff08897c2fb5762bdf7ef73607fbc.js"></script>
 
 We can now connect it to a top-level component in our app
 
-<show top level component rendering card stack>
+<script src="https://gist.github.com/callmephilip/fc9c63c59deb2bb69bc4ff5d3d809282.js"></script>
 
 So far so good. Let's move on to handling moving from the main card with tabs to a 'New Item' card.
 
@@ -54,45 +54,51 @@ So far so good. Let's move on to handling moving from the main card with tabs to
 
 Let's now enable people switching between different tabs in the app
 
-<show tab reducer>
+![React Native tab navigation](.github/tab-nav.gif)
+
+The reducer looks as follows
+
+<script src="https://gist.github.com/callmephilip/07d89d9bb8b3e63645df768c5b2807e4.js"></script>
 
 Here's how we attach this to our tab component
 
-<show tab component with tab reducer attached to it>
+<script src="https://gist.github.com/callmephilip/39c594486aba0747112271f456ab7349.js"></script>
 
 ### Quick recap
 
-Notice how we now have 2 nav hierarchies in the app coexisting in peace. Corresponding nav reducers are compact and easy to reason about.
+Notice how we now have 2 nav hierarchies in the app coexisting in peace. Corresponding nav reducers are compact and easy to reason about. Individual reducers are combined and exposed through application Redux store 
+
+<script src="https://gist.github.com/callmephilip/57765aff6bde6ddb0000d17254033c41.js"></script>
+
+Here's what it looks like in the application store (don't worry about the feed part, we are gonna see it in a second)
+
+![React Native card navigation in a tab](.github/store.png)
 
 ### Step 3: List -> Details nav
 
 Remember how we are supposed to be able to navigate from list for details view in the feed tab? Let's implement this
 
-<schema of list view -> details navigation>
+![React Native card navigation in a tab](.github/list-details-nav.gif)
 
 Traditionally, let's start with defining a nav reducer for the feed component. Once again, it is going to be a stack reducer
 
-<show reducer for list-details view>
+<script src="https://gist.github.com/callmephilip/3b07e4b09004e5025272785c2d32dc6c.js"></script>
 
 Once again attaching this to the feed component using CardStack component
 
-<show how reducer is attached to the component>    
+<script src="https://gist.github.com/callmephilip/5215aec285df0ef2c61d001c45c197fa.js"></script>
 
-### Problem
+### Adjusting reducer scope
 
 An attentive reader might be able to point out the problem we are about to run into at this point. Since our nav sub-reducers coexist within the app store, each of them will be trying to respond to an incoming event. With 2 stack reducers in the system (global navigation and list-details reducer), we are going to end up with 'push', 'back' and 'BackAction' actions clashing. What do we do?
 
 We could come up with special names for every new nav action but we will be loosing ability to reuse pre made reducers. A solution I would like to suggest it so use nav keys to scope both actions and reducers as follows
 
-<show scoped onNavigate>
+<script src="https://gist.github.com/callmephilip/661842ccc4c5a8564a28539d38e3fd85.js"></script>
 
 and a corresponding reducer now is
 
-<show scoped reducer>
-
-### Move to scoped navigation
-
-We are going to go back and convert our existing navigation to use the notion scope.
+<script src="https://gist.github.com/callmephilip/02084695e8911f1ae553591353a277f7.js"></script>
 
 ## Conclusion
 
@@ -102,7 +108,10 @@ The proposed solution is to split navigation reduction into a series of scoped n
 
 This example is intentionally very verbose (e.g. scoping can be moved to a utility library and applied to both reducers and connector). The intetion was to makes this scoping very explicit to the reader
 
-<show example>
+Adjust navigation reducers during registration
+
+<script src="https://gist.github.com/callmephilip/8eca3f1903cdd45d397b4be5ed7c07d9.js"></script>
 
 Looking forward to your feedback and experience working with navigation in RN. 
+
    
