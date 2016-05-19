@@ -4,4 +4,4 @@ To run this example on ios simulator
 npm run ios
 ```
 
-![App](.github/app-setup.gif)
+<img src=".github/app-setup.gif" width=374>
