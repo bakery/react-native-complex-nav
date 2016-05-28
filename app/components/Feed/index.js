@@ -4,15 +4,17 @@
 *
 */
 
-import { View, Text,
-	NavigationExperimental, TouchableHighlight, Image } from 'react-native';
+import { View, Platform, NavigationExperimental,
+	TouchableHighlight, Image } from 'react-native';
 import React, { Component } from 'react';
 import styles from './styles';
 import { connect } from 'react-redux';
-const { Header: NavigationHeader, CardStack: NavigationCardStack } = NavigationExperimental;
-const NavigationHeaderBackButton = require('NavigationHeaderBackButton');
 import Items from '../Items';
 import ItemDetails from '../ItemDetails';
+
+const { Header: NavigationHeader,
+	CardStack: NavigationCardStack } = NavigationExperimental;
+const NavigationHeaderBackButton = require('NavigationHeaderBackButton');
 
 class Feed extends Component {
 	render() {
@@ -29,7 +31,10 @@ class Feed extends Component {
 	}
 
 	_renderHeader(props) {
-		if (props.scene.navigationState.title) {
+		const showHeader = props.scene.navigationState.title &&
+			(Platform.OS === 'ios' || props.scene.navigationState.key === 'details');
+
+		if (showHeader) {
 			return (
 				<NavigationHeader
 				{...props}
@@ -45,7 +50,9 @@ class Feed extends Component {
 
 	_renderTitleComponent(props) {
 		return (
-			<NavigationHeader.Title>{props.scene.navigationState.title}</NavigationHeader.Title>
+			<NavigationHeader.Title>
+				{props.scene.navigationState.title}
+			</NavigationHeader.Title>
 		);
 	}
 
@@ -62,8 +69,12 @@ class Feed extends Component {
 	_renderRightComponent(props) {
 		if (props.scene.navigationState.key === 'list') {
 			return (
-				<TouchableHighlight style={styles.buttonContainer} onPress={this._onAddItem.bind(this)}>
-					<Image style={styles.button} source={{uri: 'http://facebook.github.io/react/img/logo_og.png'}} />
+				<TouchableHighlight
+					style={styles.buttonContainer}
+					onPress={this._onAddItem.bind(this)}>
+					<Image
+						style={styles.button}
+						source={{uri: 'http://facebook.github.io/react/img/logo_og.png'}} />
 				</TouchableHighlight>
 			);
 		}
@@ -73,8 +84,9 @@ class Feed extends Component {
 
 	_renderScene(props) {
 		if (props.scene.navigationState.key === 'list') {
+			const marginTop = Platform.OS === 'ios' ? NavigationHeader.HEIGHT : 0;
 			return (
-				<View style={{marginTop: NavigationHeader.HEIGHT}}>
+				<View style={{ marginTop }}>
 					<Items onSelectItem={this._onSelectItem.bind(this)} />
 				</View>
 			);
@@ -82,7 +94,7 @@ class Feed extends Component {
 
 		if (props.scene.navigationState.key === 'details') {
 			return (
-				<View style={{marginTop: NavigationHeader.HEIGHT}}>
+				<View style={{ marginTop: NavigationHeader.HEIGHT }}>
 					<ItemDetails />
 				</View>
 			);
