@@ -8,5 +8,9 @@ export default StyleSheet.create({
 	tabText: {
 		color: 'white',
 		margin: 50,
+	},
+	toolbar: {
+		backgroundColor: '#E9EAED',
+		height: 56,
 	}
 });
