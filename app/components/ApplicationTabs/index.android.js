@@ -1,4 +1,4 @@
-import { View, Text, TouchableHighlight, Image, NavigationExperimental } from 'react-native';
+import { View, Text, TouchableHighlight, NavigationExperimental } from 'react-native';
 import React, { Component } from 'react';
 import DrawerLayoutAndroid from 'DrawerLayoutAndroid';
 import ToolbarAndroid from 'ToolbarAndroid';
@@ -77,12 +77,12 @@ class ApplicationTabs extends Component {
 		return (
 			<View style={{ flex: 1 }}>
 				<ToolbarAndroid
-				 navIcon={require('./img/hamburger.png')}
-				 actions={actions}
-				 onIconClicked={() => this.drawer.openDrawer()}
-				 style={styles.toolbar}
-				 title={selectedTab.title}
-				 onActionSelected={this._onActionSelected.bind(this)}
+					navIcon={require('./img/hamburger.png')}
+					actions={actions}
+					onIconClicked={() => this.drawer.openDrawer()}
+					style={styles.toolbar}
+					title={selectedTab.title}
+					onActionSelected={this._onActionSelected.bind(this)}
 				/>
 				{this._renderTabContent(selectedTab)}
 			</View>
@@ -103,12 +103,6 @@ class ApplicationTabs extends Component {
 		}
 	}
 }
-
-// <View style={{flex: 1, alignItems: 'center'}}>
-//   <Text style={{margin: 10, fontSize: 15, textAlign: 'right'}}>Hello</Text>
-//   <Text style={{margin: 10, fontSize: 15, textAlign: 'right'}}>World!</Text>
-// </View>
-
 
 function mapDispatchToProps(dispatch) {
 	return {
