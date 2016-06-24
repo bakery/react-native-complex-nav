@@ -4,33 +4,33 @@
  *
  */
 
-import ReactNative from 'react-native';
-const { NavigationExperimental } = ReactNative;
-const { Reducer: NavigationReducer } = NavigationExperimental;
+import { NavigationExperimental } from 'react-native';
+import { PUSH_ROUTE, BACK } from '../../lib/navigation/constants';
 
-const globalNavigation = NavigationReducer.StackReducer({
-	getPushedReducerForAction: (action) => {
-		if (action.type === 'push') {
-			return (state) => (state || action.route);
-		}
-		return null;
-	},
-	initialState: {
-		key: 'global',
-		index: 0,
-		children: [
-			{
-				key: 'applicationTabs',
-				index: 0
-			},
-		],
-	},
-});
+const { StateUtils } = NavigationExperimental;
 
-module.exports = (state, action) => {
-	if (action.scope && action.scope !== 'global') {
-		return state;
-	} else {
-		return globalNavigation(state, action);
+const initialState = {
+	key: 'global',
+	index: 0,
+	routes: [
+		{
+			key: 'applicationTabs',
+			index: 0
+		},
+	],
+};
+
+module.exports = (state = initialState, action) => {
+	if (action.payload && action.payload.key !== initialState.key) {
+    return state;
+  }
+
+  switch (action.type) {
+		case PUSH_ROUTE:
+			return StateUtils.push(state, action.payload.route);
+		case BACK:
+			return StateUtils.pop(state);
+		default:
+			return state;
 	}
 };

@@ -11,18 +11,21 @@ import styles from './styles';
 import { connect } from 'react-redux';
 import Items from '../Items';
 import ItemDetails from '../ItemDetails';
+import { pushRoute, goBack } from '../../lib/navigation/actions';
 
-const { Header: NavigationHeader,
-	CardStack: NavigationCardStack } = NavigationExperimental;
+const {
+	Header: NavigationHeader,
+	CardStack: NavigationCardStack
+} = NavigationExperimental;
 const NavigationHeaderBackButton = require('NavigationHeaderBackButton');
 
 class Feed extends Component {
 	render() {
 		return (
 			<NavigationCardStack
+				onNavigate={ () => {} }
 				direction={'horizontal'}
 				navigationState={this.props.navigation}
-				onNavigate={this._onNavigate}
 				renderScene={this._renderScene.bind(this)}
 				renderOverlay={this._renderHeader.bind(this)}
 				style={styles.main}
@@ -31,8 +34,8 @@ class Feed extends Component {
 	}
 
 	_renderHeader(props) {
-		const showHeader = props.scene.navigationState.title &&
-			(Platform.OS === 'ios' || props.scene.navigationState.key === 'details');
+		const showHeader = props.scene.route.title &&
+			(Platform.OS === 'ios' || props.scene.route.key === 'details');
 
 		if (showHeader) {
 			return (
@@ -51,15 +54,17 @@ class Feed extends Component {
 	_renderTitleComponent(props) {
 		return (
 			<NavigationHeader.Title>
-				{props.scene.navigationState.title}
+				{props.scene.route.title}
 			</NavigationHeader.Title>
 		);
 	}
 
 	_renderLeftComponent(props) {
-		if (props.scene.navigationState.showBackButton) {
+		const { dispatch, navigation } = this.props;
+
+		if (props.scene.route.showBackButton) {
 			return (
-				<NavigationHeaderBackButton onNavigate={this.props.onNavigate.bind(this)} />
+				<NavigationHeaderBackButton onNavigate={() => dispatch(goBack(navigation.key))} />
 			);
 		}
 
@@ -67,7 +72,7 @@ class Feed extends Component {
 	}
 
 	_renderRightComponent(props) {
-		if (props.scene.navigationState.key === 'list') {
+		if (props.scene.route.key === 'list') {
 			return (
 				<TouchableHighlight
 					style={styles.buttonContainer}
@@ -83,7 +88,7 @@ class Feed extends Component {
 	}
 
 	_renderScene(props) {
-		if (props.scene.navigationState.key === 'list') {
+		if (props.scene.route.key === 'list') {
 			const marginTop = Platform.OS === 'ios' ? NavigationHeader.HEIGHT : 0;
 			return (
 				<View style={{ marginTop }}>
@@ -92,7 +97,7 @@ class Feed extends Component {
 			);
 		}
 
-		if (props.scene.navigationState.key === 'details') {
+		if (props.scene.route.key === 'details') {
 			return (
 				<View style={{ marginTop: NavigationHeader.HEIGHT }}>
 					<ItemDetails />
@@ -102,26 +107,23 @@ class Feed extends Component {
 	}
 
 	_onAddItem() {
-		this.props.onNavigate({
-			type: 'push',
-			scope: 'global',
-			route: {
-				key: 'new',
-				title: 'Main Screen',
-				showBackButton: true
-			}
-		});
+		const { dispatch } = this.props;
+
+		dispatch(pushRoute('global', {
+			key: 'new',
+			title: 'Main Screen',
+			showBackButton: true
+		}));
 	}
 
 	_onSelectItem() {
-		this.props.onNavigate({
-			type: 'push',
-			route: {
-				key: 'details',
-				title: 'Item details',
-				showBackButton: true
-			}
-		});
+		const { dispatch, navigation } = this.props;
+
+		dispatch(pushRoute(navigation.key, {
+			key: 'details',
+			title: 'Item details',
+			showBackButton: true
+		}));
 	}
 }
 
@@ -137,12 +139,4 @@ function mapStateToProps(state) {
 	};
 }
 
-export default connect(mapStateToProps, mapDispatchToProps, (stateProps, dispatchProps, ownProps) => {
-	return Object.assign({}, ownProps, stateProps, dispatchProps, {
-		onNavigate: (action) => {
-			dispatchProps.dispatch(Object.assign(action, {
-				scope: action.scope || stateProps.navigation.key
-			}));
-		}
-	});
-})(Feed);
+export default connect(mapStateToProps, mapDispatchToProps)(Feed);
