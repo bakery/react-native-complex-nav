@@ -1,21 +1,14 @@
-import { View, Text, TouchableHighlight, NavigationExperimental } from 'react-native';
+import { View, Text, TouchableHighlight } from 'react-native';
 import React, { Component } from 'react';
 import DrawerLayoutAndroid from 'DrawerLayoutAndroid';
 import ToolbarAndroid from 'ToolbarAndroid';
 import styles from './styles';
 import Feed from '../Feed';
 import { connect } from 'react-redux';
-const { Reducer: NavigationReducer } = NavigationExperimental;
-const { JumpToAction } = NavigationReducer.TabsReducer;
+import { jumpTo } from '../../lib/navigation/actions';
 
 class ApplicationTabs extends Component {
 	_renderTabContent(tab) {
-		// XX: replace this with code to render specific components/containers
-		// corresponding to tabs in your app, e.g.
-		// if (tab.key === 'maps') {
-		//   return <MapView />;
-		// }
-
 		if (tab.key === 'feed') {
 			return (
 				<Feed />
@@ -41,12 +34,14 @@ class ApplicationTabs extends Component {
 			this.props.onNavigate(action);
 		};
 
+		const { navigation } = this.props;
+
 		const navigationView = (
 			<View style={{flex: 1, backgroundColor: '#fff'}}>
-				{this.props.navigation.children.map( (t, i) => {
+				{this.props.navigation.routes.map( (t, i) => {
 					return (
 						<TouchableHighlight
-							onPress={ () => onNavigate(JumpToAction(i)) }
+							onPress={ () => onNavigate(jumpTo(navigation.key, i)) }
 							key={ t.key }>
 							<Text>{ t.title }</Text>
 						</TouchableHighlight>
@@ -67,7 +62,7 @@ class ApplicationTabs extends Component {
 	}
 
 	_renderApp() {
-		const selectedTab = this.props.navigation.children[this.props.navigation.index];
+		const selectedTab = this.props.navigation.routes[this.props.navigation.index];
 		const actions = [{
 			title: 'New Item',
 			icon: { uri: 'http://facebook.github.io/react/img/logo_og.png' },

@@ -10,28 +10,34 @@ import styles from './styles';
 import { connect } from 'react-redux';
 import ApplicationTabs from '../ApplicationTabs';
 import NewItem from '../NewItem';
-const { CardStack: NavigationCardStack } = NavigationExperimental;
+import { goBack } from '../../lib/navigation/actions';
+
+const {
+  CardStack: NavigationCardStack
+} = NavigationExperimental;
 
 class GlobalNavigation extends Component {
+	constructor(props) {
+		super(props);
+
+		this._renderOverlay = this._renderOverlay.bind(this);
+		this._renderScene = this._renderScene.bind(this);
+	}
+
 	render() {
 		return (
-			<NavigationCardStack
-				direction={'vertical'}
-				navigationState={this.props.navigation}
-				onNavigate={this.props.onNavigate}
-				renderScene={this._renderScene.bind(this)}
-				renderOverlay={this._renderHeader.bind(this)}
-				style={styles.main}
-			/>
+      <NavigationCardStack
+        onNavigate={ () => {} }
+        style={styles.main}
+        navigationState={this.props.navigation}
+        renderOverlay={this._renderOverlay}
+        renderScene={this._renderScene}
+      />
 		);
 	}
 
-	_renderHeader(props) {
-		return null;
-	}
-
 	_renderScene(props) {
-		if (props.scene.navigationState.key === 'applicationTabs') {
+		if (props.scene.route.key === 'applicationTabs') {
 			return (
 				<View style={{flex: 1}}>
 					<ApplicationTabs />
@@ -39,7 +45,7 @@ class GlobalNavigation extends Component {
 			);
 		}
 
-		if (props.scene.navigationState.key === 'new') {
+		if (props.scene.route.key === 'new') {
 			return (
 				<View style={{flex: 1}}>
 					<NewItem onClose={this._onCloseNewItem.bind(this)} />
@@ -48,20 +54,22 @@ class GlobalNavigation extends Component {
 		}
 	}
 
-	_renderTitleComponent(props) {
-		return null;
-	}
+	_renderOverlay(props) {
+    return null;
+  }
 
 	_onCloseNewItem() {
-		this.props.onNavigate({
-			type: 'BackAction'
-		});
+    const { dispatch, navigation } = this.props;
+    dispatch(goBack(navigation.key));
 	}
 }
 
 function mapDispatchToProps(dispatch) {
 	return {
-		dispatch
+		dispatch,
+		onNavigate() {
+			console.log('@@ onNavigate', arguments);
+		}
 	};
 }
 
@@ -71,14 +79,4 @@ function mapStateToProps(state) {
 	};
 }
 
-export default connect(mapStateToProps, mapDispatchToProps, (stateProps, dispatchProps, ownProps) => {
-	return Object.assign({}, dispatchProps, stateProps, {
-		onNavigate: (action) => {
-			dispatchProps.dispatch(
-				Object.assign(action, {
-					scope: stateProps.navigation.key
-				})
-			);
-		}
-	});
-})(GlobalNavigation);
+export default connect(mapStateToProps, mapDispatchToProps)(GlobalNavigation);
