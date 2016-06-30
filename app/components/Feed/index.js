@@ -11,7 +11,12 @@ import styles from './styles';
 import { connect } from 'react-redux';
 import Items from '../Items';
 import ItemDetails from '../ItemDetails';
-import { pushRoute, goBack } from '../../lib/navigation/actions';
+import { actions } from 'react-native-navigation-redux-helpers';
+
+const {
+  popRoute,
+  pushRoute
+} = actions;
 
 const {
 	Header: NavigationHeader,
@@ -64,7 +69,7 @@ class Feed extends Component {
 
 		if (props.scene.route.showBackButton) {
 			return (
-				<NavigationHeaderBackButton onNavigate={() => dispatch(goBack(navigation.key))} />
+				<NavigationHeaderBackButton onNavigate={() => dispatch(popRoute(navigation.key))} />
 			);
 		}
 
@@ -109,21 +114,21 @@ class Feed extends Component {
 	_onAddItem() {
 		const { dispatch } = this.props;
 
-		dispatch(pushRoute('global', {
+		dispatch(pushRoute({
 			key: 'new',
 			title: 'Main Screen',
 			showBackButton: true
-		}));
+		}, 'global'));
 	}
 
 	_onSelectItem() {
 		const { dispatch, navigation } = this.props;
 
-		dispatch(pushRoute(navigation.key, {
+		dispatch(pushRoute({
 			key: 'details',
 			title: 'Item details',
 			showBackButton: true
-		}));
+		}, navigation.key));
 	}
 }
 

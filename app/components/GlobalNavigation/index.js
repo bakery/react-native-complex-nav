@@ -10,7 +10,11 @@ import styles from './styles';
 import { connect } from 'react-redux';
 import ApplicationTabs from '../ApplicationTabs';
 import NewItem from '../NewItem';
-import { goBack } from '../../lib/navigation/actions';
+import { actions } from 'react-native-navigation-redux-helpers';
+
+const {
+  popRoute
+} = actions;
 
 const {
   CardStack: NavigationCardStack
@@ -60,7 +64,7 @@ class GlobalNavigation extends Component {
 
 	_onCloseNewItem() {
     const { dispatch, navigation } = this.props;
-    dispatch(goBack(navigation.key));
+    dispatch(popRoute(navigation.key));
 	}
 }
 
