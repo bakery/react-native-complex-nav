@@ -5,7 +5,9 @@ import ToolbarAndroid from 'ToolbarAndroid';
 import styles from './styles';
 import Feed from '../Feed';
 import { connect } from 'react-redux';
-import { jumpTo } from '../../lib/navigation/actions';
+import { actions as navigationActions } from 'react-native-navigation-redux-helpers';
+
+const { jumpTo, pushRoute } = navigationActions;
 
 class ApplicationTabs extends Component {
 	_renderTabContent(tab) {
@@ -31,7 +33,7 @@ class ApplicationTabs extends Component {
 	render() {
 		const onNavigate = (action) => {
 			this.drawer.closeDrawer();
-			this.props.onNavigate(action);
+			this.props.dispatch(action);
 		};
 
 		const { navigation } = this.props;
@@ -41,7 +43,7 @@ class ApplicationTabs extends Component {
 				{this.props.navigation.routes.map( (t, i) => {
 					return (
 						<TouchableHighlight
-							onPress={ () => onNavigate(jumpTo(navigation.key, i)) }
+							onPress={ () => onNavigate(jumpTo(i, navigation.key)) }
 							key={ t.key }>
 							<Text>{ t.title }</Text>
 						</TouchableHighlight>
@@ -85,16 +87,13 @@ class ApplicationTabs extends Component {
 	}
 
 	_onActionSelected(position) {
+		const { dispatch } = this.props;
 		if (position === 0) {
-			this.props.onNavigate({
-				type: 'push',
-				scope: 'global',
-				route: {
-					key: 'new',
-					title: 'Main Screen',
-					showBackButton: true
-				}
-			});
+			dispatch(pushRoute({
+				key: 'new',
+				title: 'Main Screen',
+				showBackButton: true
+			}, 'global'));
 		}
 	}
 }
@@ -110,12 +109,4 @@ function mapStateToProps(state) {
 		navigation: state.get('tabs')
 	};
 }
-export default connect(mapStateToProps, mapDispatchToProps, (stateProps, dispatchProps, ownProps) => {
-	return Object.assign({}, ownProps, stateProps, dispatchProps, {
-		onNavigate: (action) => {
-			dispatchProps.dispatch(Object.assign(action, {
-				scope: action.scope || stateProps.navigation.key
-			}));
-		}
-	});
-})(ApplicationTabs);
+export default connect(mapStateToProps, mapDispatchToProps)(ApplicationTabs);

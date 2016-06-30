@@ -3,7 +3,9 @@ import React, { Component } from 'react';
 import styles from './styles';
 import Feed from '../Feed';
 import { connect } from 'react-redux';
-import { jumpTo } from '../../lib/navigation/actions';
+import { actions as navigationActions } from 'react-native-navigation-redux-helpers';
+
+const { jumpTo } = navigationActions;
 
 class ApplicationTabs extends Component {
 	_renderTabContent(tab) {
@@ -35,7 +37,7 @@ class ApplicationTabs extends Component {
 				<TabBarIOS.Item key={tab.key}
 						icon={tab.icon}
 						selectedIcon={tab.selectedIcon}
-						title={tab.title} onPress={ () => dispatch(jumpTo(navigation.key, i)) }
+						title={tab.title} onPress={ () => dispatch(jumpTo(i, navigation.key)) }
 						selected={this.props.navigation.index === i}>
 						{ this._renderTabContent(tab) }
 				</TabBarIOS.Item>
