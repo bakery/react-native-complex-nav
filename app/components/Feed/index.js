@@ -69,7 +69,7 @@ class Feed extends Component {
 
 		if (props.scene.route.showBackButton) {
 			return (
-				<NavigationHeaderBackButton onNavigate={() => dispatch(popRoute(navigation.key))} />
+				<NavigationHeaderBackButton onPress={() => dispatch(popRoute(navigation.key))} />
 			);
 		}
 
