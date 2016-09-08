@@ -12,7 +12,8 @@ export default StyleSheet.create({
 		alignItems: 'center'
 	},
 	button: {
-		height: 24,
-		width: 24
+		fontSize: 30,
+		paddingRight: 10,
+		paddingTop: 2
 	}
 });
