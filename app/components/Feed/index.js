@@ -5,7 +5,7 @@
 */
 
 import { View, Platform, NavigationExperimental,
-	TouchableHighlight, Image } from 'react-native';
+	TouchableHighlight, Text } from 'react-native';
 import React, { Component } from 'react';
 import styles from './styles';
 import { connect } from 'react-redux';
@@ -25,14 +25,26 @@ const {
 const NavigationHeaderBackButton = require('NavigationHeaderBackButton');
 
 class Feed extends Component {
+	constructor() {
+		super();
+
+		this._onAddItem = this._onAddItem.bind(this);
+		this._renderTitleComponent = this._renderTitleComponent.bind(this);
+		this._renderLeftComponent = this._renderLeftComponent.bind(this);
+		this._renderRightComponent = this._renderRightComponent.bind(this);
+		this._renderScene = this._renderScene.bind(this);
+		this._renderHeader = this._renderHeader.bind(this);
+		this._onSelectItem = this._onSelectItem.bind(this);
+	}
+
 	render() {
 		return (
 			<NavigationCardStack
 				onNavigate={ () => {} }
 				direction={'horizontal'}
 				navigationState={this.props.navigation}
-				renderScene={this._renderScene.bind(this)}
-				renderOverlay={this._renderHeader.bind(this)}
+				renderScene={this._renderScene}
+				renderHeader={this._renderHeader}
 				style={styles.main}
 			/>
 		);
@@ -45,10 +57,10 @@ class Feed extends Component {
 		if (showHeader) {
 			return (
 				<NavigationHeader
-				{...props}
-				renderTitleComponent={this._renderTitleComponent.bind(this)}
-				renderLeftComponent={this._renderLeftComponent.bind(this)}
-				renderRightComponent={this._renderRightComponent.bind(this)}
+					{...props}
+					renderTitleComponent={this._renderTitleComponent}
+					renderLeftComponent={this._renderLeftComponent}
+					renderRightComponent={this._renderRightComponent}
 				/>
 			);
 		}
@@ -79,12 +91,8 @@ class Feed extends Component {
 	_renderRightComponent(props) {
 		if (props.scene.route.key === 'list') {
 			return (
-				<TouchableHighlight
-					style={styles.buttonContainer}
-					onPress={this._onAddItem.bind(this)}>
-					<Image
-						style={styles.button}
-						source={{uri: 'http://facebook.github.io/react/img/logo_og.png'}} />
+				<TouchableHighlight onPress={this._onAddItem}>
+					<Text style={styles.button}>+</Text>
 				</TouchableHighlight>
 			);
 		}
@@ -94,10 +102,9 @@ class Feed extends Component {
 
 	_renderScene(props) {
 		if (props.scene.route.key === 'list') {
-			const marginTop = Platform.OS === 'ios' ? NavigationHeader.HEIGHT : 0;
 			return (
-				<View style={{ marginTop }}>
-					<Items onSelectItem={this._onSelectItem.bind(this)} />
+				<View>
+					<Items onSelectItem={this._onSelectItem} />
 				</View>
 			);
 		}

@@ -24,7 +24,7 @@ class GlobalNavigation extends Component {
 	constructor(props) {
 		super(props);
 
-		this._renderOverlay = this._renderOverlay.bind(this);
+		this._renderHeader = this._renderHeader.bind(this);
 		this._renderScene = this._renderScene.bind(this);
 	}
 
@@ -34,7 +34,7 @@ class GlobalNavigation extends Component {
         onNavigate={ () => {} }
         style={styles.main}
         navigationState={this.props.navigation}
-        renderOverlay={this._renderOverlay}
+        renderHeader={this._renderHeader}
         renderScene={this._renderScene}
       />
 		);
@@ -58,7 +58,7 @@ class GlobalNavigation extends Component {
 		}
 	}
 
-	_renderOverlay(props) {
+	_renderHeader(props) {
     return null;
   }
 

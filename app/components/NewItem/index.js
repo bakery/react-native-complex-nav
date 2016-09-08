@@ -4,7 +4,7 @@
  *
  */
 
-import { View, TouchableHighlight, Image } from 'react-native';
+import { View, TouchableHighlight, Text } from 'react-native';
 import React, { Component } from 'react';
 import styles from './styles';
 
@@ -14,7 +14,7 @@ class NewItem extends Component {
 			<View style={styles.container}>
 				<View style={styles.buttonContainer}>
 					<TouchableHighlight onPress={this.props.onClose}>
-						<Image style={styles.button} source={{uri: 'http://facebook.github.io/react/img/logo_og.png'}} />
+						<Text style={styles.button}>X</Text>
 					</TouchableHighlight>
 				</View>
 			</View>
