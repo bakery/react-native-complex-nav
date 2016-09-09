@@ -89,7 +89,7 @@ class Feed extends Component {
 	}
 
 	_renderRightComponent(props) {
-		if (props.scene.route.key === 'list') {
+		if (props.scene.route.key === 'details') {
 			return (
 				<TouchableHighlight onPress={this._onAddItem}>
 					<Text style={styles.button}>+</Text>
